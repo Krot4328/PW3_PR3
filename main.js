@@ -7,7 +7,40 @@ const character = {
     defaultHP: 100,
     damageHP: 90,
     elHP: document.getElementById('health-character'),
-    elProgressBar: document.getElementById('progressbar-character')
+    elProgressBar: document.getElementById('progressbar-character'),
+    
+    renderHP() {
+        this.renderHPLife();
+        this.renderProgressBarHP();
+    },
+    
+    renderHPLife() {
+        this.elHP.innerText = this.damageHP + ' / ' + this.defaultHP;
+    },
+    
+    renderProgressBarHP() {
+        this.elProgressBar.style.width = this.damageHP + '%';
+        if (this.damageHP > 50) {
+            this.elProgressBar.classList.remove('low', 'critical');
+        } else if (this.damageHP <= 50 && this.damageHP > 20) {
+            this.elProgressBar.classList.add('low');
+            this.elProgressBar.classList.remove('critical');
+        } else {
+            this.elProgressBar.classList.add('critical');
+        }
+    },
+    
+    changeHP(damage) {
+        if (this.damageHP < damage) {
+            this.damageHP = 0;
+            alert(this.name + ' програв!');
+            $btnAttack.disabled = true;
+            $btnHealthUp.disabled = true;
+        } else {
+            this.damageHP -= damage;
+        }
+        this.renderHP();
+    }
 };
 
 const enemy = {
@@ -15,7 +48,40 @@ const enemy = {
     defaultHP: 100,
     damageHP: 100,
     elHP: document.getElementById('health-enemy'),
-    elProgressBar: document.getElementById('progressbar-enemy')
+    elProgressBar: document.getElementById('progressbar-enemy'),
+    
+    renderHP() {
+        this.renderHPLife();
+        this.renderProgressBarHP();
+    },
+    
+    renderHPLife() {
+        this.elHP.innerText = this.damageHP + ' / ' + this.defaultHP;
+    },
+    
+    renderProgressBarHP() {
+        this.elProgressBar.style.width = this.damageHP + '%';
+        if (this.damageHP > 50) {
+            this.elProgressBar.classList.remove('low', 'critical');
+        } else if (this.damageHP <= 50 && this.damageHP > 20) {
+            this.elProgressBar.classList.add('low');
+            this.elProgressBar.classList.remove('critical');
+        } else {
+            this.elProgressBar.classList.add('critical');
+        }
+    },
+    
+    changeHP(damage) {
+        if (this.damageHP < damage) {
+            this.damageHP = 0;
+            alert(this.name + ' програв!');
+            $btnAttack.disabled = true;
+            $btnHealthUp.disabled = true;
+        } else {
+            this.damageHP -= damage;
+        }
+        this.renderHP();
+    }
 };
 
 $btnAttack.addEventListener('click', function () {
@@ -27,42 +93,16 @@ $btnHealthUp.addEventListener('click', function () {
 });
 
 function init() {
-    updateHealthDisplay(character);
-    updateHealthDisplay(enemy);
-}
-
-function renderHP(person) {
-    renderHPLife(person);
-    renderProgressBarHP(person);
-}
-
-function renderHPLife(person) {
-    person.elHP.innerText = person.damageHP + ' / ' + person.defaultHP;
-}
-
-function renderProgressBarHP(person) {
-    person.elProgressBar.style.width = person.damageHP + '%';
-    if (person.damageHP > 50) {
-        person.elProgressBar.classList.remove('low', 'critical');
-    } else if (person.damageHP <= 50 && person.damageHP > 20) {
-        person.elProgressBar.classList.add('low');
-        person.elProgressBar.classList.remove('critical');
-    } else {
-        person.elProgressBar.classList.add('critical');
-    }
-}
-
-function updateHealthDisplay(person) {
-    renderHPLife(person);
-    renderProgressBarHP(person);
+    character.renderHP();
+    enemy.renderHP();
 }
 
 function attack(maxDamage) {
     const characterDamage = random(maxDamage);
     const enemyDamage = random(maxDamage);
-    changeHP(characterDamage, character);
-    changeHP(enemyDamage, enemy);
-    logAction(`${enemy.name} отимав ${enemyDamage} урону!`);
+    character.changeHP(characterDamage);
+    enemy.changeHP(enemyDamage);
+    logAction(`${enemy.name} отримав ${enemyDamage} урону!`);
     logAction(`${character.name} отримав ${characterDamage} урону!`);
 }
 
@@ -70,20 +110,8 @@ function healthUp(maxHeal) {
     const healAmount = random(maxHeal);
     const target = Math.random() > 0.5 ? character : enemy;
     target.damageHP = Math.min(target.defaultHP, target.damageHP + healAmount);
-    updateHealthDisplay(target);
+    target.renderHP();
     logAction(`${target.name} відновив ${healAmount} здоров'я!`);
-}
-
-function changeHP(damage, person) {
-    if (person.damageHP < damage) {
-        person.damageHP = 0;
-        alert(person.name + ' програв!');
-        $btnAttack.disabled = true;
-        $btnHealthUp.disabled = true;
-    } else {
-        person.damageHP -= damage;
-    }
-    updateHealthDisplay(person);
 }
 
 function random(num) {
