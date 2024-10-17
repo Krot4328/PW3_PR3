@@ -78,22 +78,33 @@ const enemy = {
     }
 };
 
-$btnAttack.addEventListener('click', function () {
-    attack(20);
-});
+function clickCounter(maxClicks, buttonElement, buttonName, action) {
+    let clicks = 0;
 
-$btnHealthUp.addEventListener('click', function () {
-    healthUp(20);
-});
+    function updateButtonText() {
+        buttonElement.innerText = `${buttonName} [${maxClicks - clicks}/${maxClicks}]`;
+    }
+    updateButtonText();
 
-function init() {
-    character.renderHP();
-    enemy.renderHP();
+    return function () {
+        if (clicks < maxClicks) {
+            clicks++;
+            console.log(`Кнопка "${buttonName}" натиснута ${clicks} разів. Залишилося натискань: ${maxClicks - clicks}`);
+            updateButtonText();
+
+            action();
+
+            if (clicks === maxClicks) {
+                buttonElement.disabled = true;
+                console.log(`Кнопка "${buttonName}" більше не активна. Максимальна кількість натискань: ${maxClicks}.`);
+            }
+        }
+    };
 }
 
-function attack(maxDamage) {
-    const characterDamage = random(maxDamage);
-    const enemyDamage = random(maxDamage);
+function attackAction() {
+    const characterDamage = random(20);
+    const enemyDamage = random(20);
 
     character.changeHP(characterDamage);
     enemy.changeHP(enemyDamage);
@@ -101,8 +112,8 @@ function attack(maxDamage) {
     logAction(generateLog(character, enemy, characterDamage, enemyDamage));
 }
 
-function healthUp(maxHeal) {
-    const healAmount = random(maxHeal);
+function healthUpAction() {
+    const healAmount = random(20);
     const target = Math.random() > 0.5 ? character : enemy;
     
     const { name: targetName, defaultHP, damageHP } = target;
@@ -112,6 +123,12 @@ function healthUp(maxHeal) {
     
     logAction(`${targetName} відновив ${healAmount} здоров'я!`);
 }
+
+const clickBtnAttack = clickCounter(10, $btnAttack, 'Attack', attackAction);
+const clickBtnHealthUp = clickCounter(10, $btnHealthUp, 'Health Up', healthUpAction);
+
+$btnAttack.addEventListener('click', clickBtnAttack);
+$btnHealthUp.addEventListener('click', clickBtnHealthUp);
 
 function random(num) {
     return Math.ceil(Math.random() * num);
@@ -146,6 +163,11 @@ function logAction(text) {
             newLog.remove();
         }, 500);
     }, 3000);
+}
+
+function init() {
+    character.renderHP();
+    enemy.renderHP();
 }
 
 init();
