@@ -1,6 +1,6 @@
-const $btnAttack = document.getElementById('btn-attack');
+const $btnAttack = document.getElementById('btn-attack'); 
 const $btnHealthUp = document.getElementById('btn-health-up');
-const $log = document.getElementById('log');
+const $logs = document.getElementById('logs');
 
 const character = {
     name: 'Dialga',
@@ -10,35 +10,32 @@ const character = {
     elProgressBar: document.getElementById('progressbar-character'),
     
     renderHP() {
-        this.renderHPLife();
-        this.renderProgressBarHP();
-    },
-    
-    renderHPLife() {
-        this.elHP.innerText = this.damageHP + ' / ' + this.defaultHP;
-    },
-    
-    renderProgressBarHP() {
-        this.elProgressBar.style.width = this.damageHP + '%';
-        if (this.damageHP > 50) {
-            this.elProgressBar.classList.remove('low', 'critical');
-        } else if (this.damageHP <= 50 && this.damageHP > 20) {
-            this.elProgressBar.classList.add('low');
-            this.elProgressBar.classList.remove('critical');
+        const { defaultHP, damageHP, elHP, elProgressBar } = this;
+        elHP.innerText = `${damageHP} / ${defaultHP}`;
+        elProgressBar.style.width = `${(damageHP / defaultHP) * 100}%`;
+        
+        if (damageHP > 50) {
+            elProgressBar.classList.remove('low', 'critical');
+        } else if (damageHP <= 50 && damageHP > 20) {
+            elProgressBar.classList.add('low');
+            elProgressBar.classList.remove('critical');
         } else {
-            this.elProgressBar.classList.add('critical');
+            elProgressBar.classList.add('critical');
         }
     },
     
     changeHP(damage) {
-        if (this.damageHP < damage) {
+        const { name, damageHP } = this;
+        
+        if (damageHP < damage) {
             this.damageHP = 0;
-            alert(this.name + ' програв!');
+            alert(`${name} програв!`);
             $btnAttack.disabled = true;
             $btnHealthUp.disabled = true;
         } else {
             this.damageHP -= damage;
         }
+        
         this.renderHP();
     }
 };
@@ -51,35 +48,32 @@ const enemy = {
     elProgressBar: document.getElementById('progressbar-enemy'),
     
     renderHP() {
-        this.renderHPLife();
-        this.renderProgressBarHP();
-    },
-    
-    renderHPLife() {
-        this.elHP.innerText = this.damageHP + ' / ' + this.defaultHP;
-    },
-    
-    renderProgressBarHP() {
-        this.elProgressBar.style.width = this.damageHP + '%';
-        if (this.damageHP > 50) {
-            this.elProgressBar.classList.remove('low', 'critical');
-        } else if (this.damageHP <= 50 && this.damageHP > 20) {
-            this.elProgressBar.classList.add('low');
-            this.elProgressBar.classList.remove('critical');
+        const { defaultHP, damageHP, elHP, elProgressBar } = this;
+        elHP.innerText = `${damageHP} / ${defaultHP}`;
+        elProgressBar.style.width = `${(damageHP / defaultHP) * 100}%`;
+        
+        if (damageHP > 50) {
+            elProgressBar.classList.remove('low', 'critical');
+        } else if (damageHP <= 50 && damageHP > 20) {
+            elProgressBar.classList.add('low');
+            elProgressBar.classList.remove('critical');
         } else {
-            this.elProgressBar.classList.add('critical');
+            elProgressBar.classList.add('critical');
         }
     },
     
     changeHP(damage) {
-        if (this.damageHP < damage) {
+        const { name, damageHP } = this;
+        
+        if (damageHP < damage) {
             this.damageHP = 0;
-            alert(this.name + ' програв!');
+            alert(`${name} програв!`);
             $btnAttack.disabled = true;
             $btnHealthUp.disabled = true;
         } else {
             this.damageHP -= damage;
         }
+        
         this.renderHP();
     }
 };
@@ -100,29 +94,50 @@ function init() {
 function attack(maxDamage) {
     const characterDamage = random(maxDamage);
     const enemyDamage = random(maxDamage);
+
     character.changeHP(characterDamage);
     enemy.changeHP(enemyDamage);
-    logAction(`${enemy.name} отримав ${enemyDamage} урону!`);
-    logAction(`${character.name} отримав ${characterDamage} урону!`);
+
+    logAction(generateLog(character, enemy, characterDamage, enemyDamage));
 }
 
 function healthUp(maxHeal) {
     const healAmount = random(maxHeal);
     const target = Math.random() > 0.5 ? character : enemy;
-    target.damageHP = Math.min(target.defaultHP, target.damageHP + healAmount);
+    
+    const { name: targetName, defaultHP, damageHP } = target;
+    
+    target.damageHP = Math.min(defaultHP, damageHP + healAmount);
     target.renderHP();
-    logAction(`${target.name} відновив ${healAmount} здоров'я!`);
+    
+    logAction(`${targetName} відновив ${healAmount} здоров'я!`);
 }
 
 function random(num) {
     return Math.ceil(Math.random() * num);
 }
 
+function generateLog({ name: firstPersonName }, { name: secondPersonName }, characterDamage, enemyDamage) {
+    const logs = [
+        `${firstPersonName} згадав щось важливе, але несподівано ${secondPersonName}, не пам'ятаючи себе від переляку, вдарив у передпліччя ворога.`,
+        `${firstPersonName} поперхнувся, і за це ${secondPersonName} з переляку приклав прямий удар коліном у лоб ворога.`,
+        `${firstPersonName} забувся, але в цей час нахабний ${secondPersonName}, прийнявши вольове рішення, нечутно підійшовши ззаду, вдарив.`,
+        `${firstPersonName} прийшов до тями, але несподівано ${secondPersonName} випадково завдав потужного удару.`,
+        `${firstPersonName} поперхнувся, але в цей час ${secondPersonName} неохоче розтрощив кулаком <вирізано цензурою> супротивника.`,
+        `${firstPersonName} здивувався, а ${secondPersonName}, похитнувшись, вліпив підлий удар.`,
+        `${firstPersonName} висморкався, але несподівано ${secondPersonName} провів дроблячий удар.`,
+        `${firstPersonName} похитнувся, і раптово нахабний ${secondPersonName} без причини вдарив у ногу супротивника.`,
+        `${firstPersonName} засмутився, як раптом, несподівано ${secondPersonName} випадково вліпив стопою в живіт суперника.`,
+        `${firstPersonName} намагався щось сказати, але раптом, несподівано ${secondPersonName} з нудьги розбив брову супернику.`
+    ];
+    return logs[random(logs.length) - 1];
+}
+
 function logAction(text) {
     const newLog = document.createElement('p');
     newLog.textContent = text;
-    $log.appendChild(newLog);
-    $log.scrollTop = $log.scrollHeight;
+    $logs.insertBefore(newLog, $logs.children[0]);
+    $logs.scrollTop = $logs.scrollHeight;
 
     setTimeout(() => {
         newLog.style.transition = 'opacity 0.5s ease';
