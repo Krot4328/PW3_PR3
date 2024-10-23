@@ -8,46 +8,59 @@
     <title>Pokemon Fight</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 <div class="body">
     <header>
-        <img class="logo" title="Reset Game" src="./assets/Pokemon_logo.png" alt="Pokemon">
+        <img class="logo"
+             title="Reset Game"
+             src="./assets/Pokemon_logo.png"
+             alt="Pokemon">
     </header>
-    <div class="playground">
-        <div class="pokemon character">
-            <span class="lvl">Lv. 70</span>
-            <img src="./assets/Dialga.png" class="sprite">
+
+    <div class="button-container">
+        <div id="startGame" class="button">Start Game</div>
+    </div>
+
+    <div class="playground" style="display: none;">
+        <div class="pokemon player1">
+            <span class="lvl">Lv. 25</span>
+            <img src="" class="sprite" id="player1-image">
             <div class="details">
-                <h2 class="name" id="name-character">Dialga</h2>
+                <h2 class="name" id="name-player1"></h2>
                 <div class="hp">
                     <div class="bar">
-                        <div class="health" id="progressbar-character" style="width: 100%;"></div>
+                        <div class="health" id="progressbar-player1" style="width: 100%;"></div>
                     </div>
-                    <span class="text" id="health-character">100 / 100</span>
+                    <span class="text" id="health-player1"></span>
                 </div>
             </div>
         </div>
+
         <div class="control">
-            <button class="button" id="btn-attack">Attack</button>
-            <button class="button" id="btn-health-up">Health Up</button>
-        </div>               
-        <div class="pokemon enemy" id="enemy">
-            <span class="lvl">Lv. 70</span>
-            <img src="./assets/Palkia.png" class="sprite">
+            <div class="control container1"></div>
+            <div class="control container2"></div>
+        </div>
+
+        <div class="pokemon player2">
+            <span class="lvl">Lv. 25</span>
+            <img src="" class="sprite" id="player2-image">
             <div class="details">
-                <h2 class="name" id="name-enemy">Palkia</h2>
+                <h2 class="name" id="name-player2"></h2>
                 <div class="hp">
                     <div class="bar">
-                        <div class="health" id="progressbar-enemy" style="width: 100%;"></div>
+                        <div class="health" id="progressbar-player2" style="width: 100%;"></div>
                     </div>
-                    <span class="text" id="health-enemy">100 / 100</span>
+                    <span class="text" id="health-player2"></span>
                 </div>
             </div>
-        </div>                
+        </div>
+    </div>
+
+    <div class="button-container">
+        <div id="resetGame" class="button" style="display: none;">Restart game</div>
     </div>
     <div id="logs"></div>
 </div>
 <div class="catch_screen"></div>
-<script type="module" src="./game.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>

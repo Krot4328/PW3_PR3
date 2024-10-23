@@ -35,18 +35,26 @@ body {
 }
 
 .control {
-    width: 320px;
-    height: auto;
-    margin: 20px auto;
+    height: 100%;
+    position: relative;
+    margin: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.container1 {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+}
+
+.container2 {
+    display: flex;
+    flex-direction: column;
 }
 
 .playground {
-    max-width: 1024px;
+    max-width: 1800px;
     display: flex;
     justify-content: space-around;
     margin: 30px auto;
@@ -277,8 +285,10 @@ body {
     outline: none !important;
     cursor: pointer;
     font-size: 18px;
-
+    width: 240px;
+    margin: 10px;
 }
+
 .button:after {
     content: "";
     position: absolute;
@@ -475,11 +485,20 @@ h1 {
 }
 
 #logs {
-    background-color: rgba(0, 0, 0, 0.7);
+    max-height: 180px;
+    width: 100%;
+    overflow-y: hidden;
     color: white;
-    border-radius: 5px;
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 20px;
-    font-size: 18px;
+    background-color: #303030;
+    margin: 20px auto 0;
+}
+
+#logs p {
+    margin: 0;
+    padding: 5px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
 }
